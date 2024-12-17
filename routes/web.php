@@ -24,9 +24,25 @@ Route::prefix('posts')->name('posts.')->group(function () {
     Route::get('/', [PostsController::class, 'index'])
         ->name('index');
 
-    Route::get('/create', [PostsController::class, 'create'])
+    Route::get('create', [PostsController::class, 'create'])
         ->middleware(['auth'])
         ->name('create');
+
+    Route::post('/', [PostsController::class, 'store'])
+        ->middleware(['auth'])
+        ->name('store');
+
+    Route::get('edit/{post}', [PostsController::class, 'edit'])
+        ->middleware(['auth'])
+        ->name('edit');
+
+    Route::post('/{post}', [PostsController::class, 'update'])
+        ->middleware(['auth'])
+        ->name('update');
+
+    Route::delete('/{post}', [PostsController::class, 'destroy'])
+        ->middleware(['auth'])
+        ->name('destroy');
 });
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

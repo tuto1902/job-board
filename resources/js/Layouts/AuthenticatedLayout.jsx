@@ -15,7 +15,7 @@ export default function AuthenticatedLayout({ header, children }) {
     return (
         <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
             <nav className="border-b border-gray-100 bg-white dark:border-gray-700 dark:bg-gray-800">
-                <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
                     <div className="flex h-16 justify-between">
                         <div className="flex">
                             <div className="flex shrink-0 items-center">
@@ -26,10 +26,10 @@ export default function AuthenticatedLayout({ header, children }) {
 
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                                 <NavLink
-                                    href={route('dashboard')}
-                                    active={route().current('dashboard')}
+                                    href={route('posts.index')}
+                                    active={route().current('posts.index')}
                                 >
-                                    Dashboard
+                                    Posts
                                 </NavLink>
                             </div>
                         </div>
@@ -78,10 +78,11 @@ export default function AuthenticatedLayout({ header, children }) {
                                         </Dropdown.Content>
                                     </Dropdown>
                                 )}
-                                {!user && (
-                                    <ButtonLink href={route('posts.create')}>Post A Job</ButtonLink>
-                                )}
                                 </div>
+                                {!user && (
+                                    <NavLink href={route('login')} className="underline mr-2">Sign In</NavLink>
+                                )}
+                                <ButtonLink href={route('posts.create')}>Post A Job</ButtonLink>
                             </div>
 
                         <div className="-me-2 flex items-center sm:hidden">
@@ -141,10 +142,11 @@ export default function AuthenticatedLayout({ header, children }) {
                             Dashboard
                         </ResponsiveNavLink>
                         {!user && (
-                            <div className="ps-3">
-                                <ButtonLink href={route('posts.create')}>Post A Job</ButtonLink>
-                            </div>
+                            <ResponsiveNavLink href={route('login')} className="underline">Sign In</ResponsiveNavLink>
                         )}
+                        <div className="ps-3">
+                            <ButtonLink href={route('posts.create')}>Post A Job</ButtonLink>
+                        </div>
                     </div>
                     {user && (
                         <div className="border-t border-gray-200 pb-1 pt-4 dark:border-gray-600">
@@ -176,7 +178,7 @@ export default function AuthenticatedLayout({ header, children }) {
 
             {header && (
                 <header className="bg-white shadow dark:bg-gray-800">
-                    <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+                    <div className="mx-auto max-w-5xl px-4 py-6 sm:px-6 lg:px-8">
                         {header}
                     </div>
                 </header>

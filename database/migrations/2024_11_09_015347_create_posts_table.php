@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('company_name');
             $table->integer('salary')->nullable();
             $table->string('company_logo')->nullable();
+            $table->foreignId('user_id')->constrained('users');
             $table->timestamps();
         });
     }
