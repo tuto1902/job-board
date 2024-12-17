@@ -19,7 +19,7 @@ class PostFactory extends Factory
         return [
             'title' => fake()->sentence(nbWords: 4),
             'location' => fake()->address(),
-            'employment_type' => 'other',
+            'employment_type' => 'Other',
             'url' => fake()->url(),
             'company_name' => fake()->company(),
             'salary' => fake()->numberBetween(1000, 3000)

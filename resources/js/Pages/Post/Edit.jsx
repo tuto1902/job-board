@@ -3,21 +3,21 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import PostForm from '@/Pages/Post/Partials/PostForm';
 import { Head } from '@inertiajs/react';
 
-export default function Create({ employmentTypes }) {
+export default function Edit({ post, employmentTypes }) {
     return (
         <AuthenticatedLayout
             header={
                 <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
-                    Post A Job
+                    Edit A Job Post
                 </h2>
             }
         >
-            <Head title="Post A Job" />
+            <Head title="Edit A Job Post" />
 
             <div className="py-12">
                 <div className="mx-auto max-w-5xl sm:px-6 lg:px-8 space-y-6">
                     <div className="overflow-hidden bg-white shadow-sm p-4 sm:p-8 sm:rounded-lg dark:bg-gray-800">
-                        <PostForm className="max-w-xl" employmentTypes={employmentTypes} />
+                        <PostForm className="max-w-xl" jobPost={post} employmentTypes={employmentTypes} />
                     </div>
                 </div>
             </div>

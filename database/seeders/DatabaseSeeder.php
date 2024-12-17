@@ -17,14 +17,22 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::factory()->create([
+        User::factory()
+        ->has(
+            Post::factory()->count(9)
+        )
+        ->create([
             'name' => 'Test User',
             'email' => 'test@example.com',
         ]);
 
-        Post::factory()
-            ->has(Tag::factory()->count(3))
-            ->count(10)
-            ->create();
+        User::factory()
+        ->has(
+            Post::factory()->count(1)
+        )
+        ->create([
+            'name' => 'Arturo',
+            'email' => 'arturo@example.com',
+        ]);
     }
 }
