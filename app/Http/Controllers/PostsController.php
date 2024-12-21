@@ -4,16 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Enums\EmploymentType;
 use App\Models\Post;
+use App\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Enum;
 use Inertia\Inertia;
 
 class PostsController extends Controller
 {
     public function index()
     {
-        $posts = Post::all();
+        $posts = Post::with('tags')->get();
 
         return Inertia::render('Post/Index', [
             'user' => Auth::user(),
@@ -27,13 +30,26 @@ class PostsController extends Controller
     {
         $employmentTypes = EmploymentType::cases();
 
-        return Inertia::render('Post/Create', ['employmentTypes' => $employmentTypes]);
+        $tags = Tag::all();
+
+        return Inertia::render('Post/Create', ['employmentTypes' => $employmentTypes, 'tags' => $tags]);
     }
 
     public function store(Request $request)
     {
+        $request->validate([
+            'title' => 'required',
+            'location' => 'required',
+            'employment_type' => ['required', Rule::enum(EmploymentType::class)],
+            'url' => ['required', 'url:http,https'],
+            'company_name' => 'required',
+            'tags' => 'array',
+            'tags.*' => [Rule::exists('tags', 'id')],
+        ]);
+
         $path = $request->company_logo->store('logos', 'public');
-        Post::create([
+
+        $post = Auth::user()->posts()->create([
             'title' => $request->title,
             'location' => $request->location,
             'employment_type' => $request->employment_type,
@@ -42,6 +58,7 @@ class PostsController extends Controller
             'company_name' => $request->company_name,
             'company_logo' => $path
         ]);
+        $post->tags()->sync($request->tags);
 
         return to_route('posts.index');
     }
@@ -53,8 +70,10 @@ class PostsController extends Controller
         }
 
         $employmentTypes = EmploymentType::cases();
+        $tags = Tag::all();
+        $post->load('tags');
 
-        return Inertia::render('Post/Edit', [ 'post' => $post, 'employmentTypes' => $employmentTypes ]);
+        return Inertia::render('Post/Edit', [ 'post' => $post, 'tags' => $tags, 'employmentTypes' => $employmentTypes ]);
     }
 
     public function update(Request $request, Post $post)
@@ -62,6 +81,16 @@ class PostsController extends Controller
         if ($request->user()->cannot('update', $post)) {
             abort(403);
         }
+
+        $request->validate([
+            'title' => 'required',
+            'location' => 'required',
+            'employment_type' => ['required', Rule::enum(EmploymentType::class)],
+            'url' => ['required', 'url:http,https'],
+            'company_name' => 'required',
+            'tags' => 'array',
+            'tags.*' => [Rule::exists('tags', 'id')],
+        ]);
 
         $oldPath = $post->company_logo;
         $path = $request->company_logo?->store('logos', 'public');
@@ -83,6 +112,8 @@ class PostsController extends Controller
             'company_name' => $request->company_name,
             'company_logo' => $path
         ]);
+
+        $post->tags()->sync($request->tags);
 
         return to_route('posts.index');
     }
